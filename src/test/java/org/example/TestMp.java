@@ -1,6 +1,7 @@
 package org.example;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.example.beans.Employee;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,10 +70,44 @@ public class TestMp {
     /**
      * 统计的查询
      */
-    @Test
     public void testArSelectCount(){
         Employee employee=new Employee();
         int count=employee.selectCount(new EntityWrapper<Employee>().eq("gender", "0"));
         System.out.println(count);
+    }
+
+
+    public void testArDelete(){
+        Employee employee=new Employee();
+        //方式一：
+        boolean b = employee.deleteById(2);
+        System.out.println("删除结果："+b);
+        //方式二：
+        employee=new Employee();
+        employee.setId(2);
+        boolean b1 = employee.deleteById();
+        System.out.println("删除结果："+b1);
+    }
+
+    /**
+     * 带条件的删除
+     */
+    public void testArDeleteWrapper(){
+        Employee employee=new Employee();
+        boolean b1 = employee.delete(new EntityWrapper<Employee>().like("last_name","小"));
+        System.out.println("删除结果："+b1);
+    }
+
+    /**
+     * Ar分页操作
+     */
+    @Test
+    public void testArSelectByPage(){
+        Employee employee=new Employee();
+        Page<Employee> employeePage = employee.selectPage(new Page<Employee>(1, 1),
+                new EntityWrapper<Employee>().like("last_name", "老"));
+        System.out.println(employeePage.getRecords());
+        //除此之外，也有分页信息
+        System.out.println("总数："+employeePage.getSize());
     }
 }
